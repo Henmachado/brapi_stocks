@@ -1,17 +1,19 @@
 import os
 import re
 
+import constants
+
 from spark import dataframes
 from pyspark.sql import SparkSession
 
 
-def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw") -> None:
+def load_all_tables(spark: SparkSession, data_dir: str = constants.RAW_LAYER) -> None:
     """
     Automatically discovers the latest raw JSON files and creates DataFrames
     for all 'create_*' functions defined in spark.dataframes.
     """
     # 1. Get all available functions that start with 'create_'
-    create_funcs = [f for f in dir(dataframes) if f.startswith('create_') and callable(getattr(dataframes, f))]
+    table_creation_functions = [f for f in dir(dataframes) if f.startswith('create_') and callable(getattr(dataframes, f))]
     
     # 2. Map function names to their base file names
     # e.g., 'create_activetickers_df' -> 'active_tickers'
@@ -19,7 +21,7 @@ def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw") -> None:
     
     all_files = os.listdir(data_dir)
     
-    for func_name in create_funcs:
+    for func_name in table_creation_functions:
         # Extract the logical name, e.g., 'balancesheethistoryquarterly'
         logical_name = func_name.replace('create_', '').replace('_df', '')
         
@@ -41,9 +43,3 @@ def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw") -> None:
         # Register as a Temp View for SQL queries
         # View name will be the logical name (e.g., 'balancesheethistoryquarterly')
         df.createOrReplaceTempView(logical_name)
-
-
-if __name__ == "__main__":
-    # Quick test
-    spark = SparkSession.builder.appName("TestLoader").master("local[*]").getOrCreate()
-    load_all_tables(spark)

@@ -12,6 +12,9 @@ build/
 dist/
 .ipynb_checkpoints/
 
+# Spark
+spark-warehouse/
+
 # IDEs
 .idea/
 .vscode/
