@@ -5,7 +5,6 @@ import logging
 import requests
 import time
 
-from datetime import datetime
 from dotenv import load_dotenv
 from typing import Any
 
@@ -117,14 +116,12 @@ def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str) -> list[
 
 
 if __name__ == "__main__":
-    today_str = datetime.now().strftime("%Y_%m_%d")
-
     # Fetch all active stock tickers (~2,280 items on jun/2026)
     active_tickers_response = get_active_stock_tickers()
 
     save_json_data(
         data=active_tickers_response,
-        file_name=f"activetickers_{today_str}"
+        file_name=f"activetickers"
     )
 
     active_tickers_list: list[str] = [stock['stock'] for stock in active_tickers_response]
@@ -139,7 +136,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"defaultkeystatistics_{today_str}"
+        file_name=f"defaultkeystatistics"
     )
 
     # Quarterly Modules -----------------------------------------------
@@ -151,7 +148,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"balancesheethistoryquarterly_{today_str}"
+        file_name=f"balancesheethistoryquarterly"
     )
 
     # -----------------------------------------------------------------
@@ -163,7 +160,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"cashflowhistoryquarterly_{today_str}"
+        file_name=f"cashflowhistoryquarterly"
     )
 
     # -----------------------------------------------------------------
@@ -175,7 +172,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"defaultkeystatisticshistoryquarterly_{today_str}"
+        file_name=f"defaultkeystatisticshistoryquarterly"
     )
 
     # -----------------------------------------------------------------
@@ -187,7 +184,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"incomestatementhistoryquarterly_{today_str}"
+        file_name=f"incomestatementhistoryquarterly"
     )
 
     # -----------------------------------------------------------------
@@ -199,7 +196,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"financialdatahistoryquarterly_{today_str}"
+        file_name=f"financialdatahistoryquarterly"
     )
 
     # -----------------------------------------------------------------
@@ -211,7 +208,7 @@ if __name__ == "__main__":
     )
     save_json_data(
         data=api_response,
-        file_name=f"valueaddedhistoryquarterly_{today_str}"
+        file_name=f"valueaddedhistoryquarterly"
     )
 
     # -----------------------------------------------------------------

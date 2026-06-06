@@ -8,15 +8,24 @@ def read_raw_layer_json(spark: SparkSession, file_name: str) -> DataFrame:
     return spark.read.option("multiline", "true").json(f"{constants.RAW_LAYER}/{file_name}")
 
 
-def create_activetickers_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_activetickers_df(
+    spark: SparkSession,
+        file_name: str = "activetickers.json",
+) -> DataFrame:
     return read_raw_layer_json(spark=spark, file_name=file_name)
 
 
-def create_defaultkeystatistics_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_defaultkeystatistics_df(
+    spark: SparkSession,
+    file_name: str = "defaultkeystatistics.json",
+) -> DataFrame:
     return read_raw_layer_json(spark=spark, file_name=file_name)
 
 
-def create_balancesheethistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_balancesheethistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "balancesheethistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("balanceSheetHistoryQuarterly").alias("array"))
@@ -159,7 +168,10 @@ def create_balancesheethistoryquarterly_df(spark: SparkSession, file_name: str) 
     )
 
 
-def create_cashflowhistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_cashflowhistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "cashflowhistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("cashflowHistoryQuarterly").alias("array"))
@@ -186,7 +198,10 @@ def create_cashflowhistoryquarterly_df(spark: SparkSession, file_name: str) -> D
     )
 
 
-def create_defaultkeystatisticshistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_defaultkeystatisticshistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "defaultkeystatisticshistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("defaultKeyStatisticsHistoryQuarterly").alias("array"))
@@ -218,7 +233,10 @@ def create_defaultkeystatisticshistoryquarterly_df(spark: SparkSession, file_nam
     )
 
 
-def create_incomestatementhistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_incomestatementhistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "incomestatementhistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("incomeStatementHistoryQuarterly").alias("array"))
@@ -282,7 +300,10 @@ def create_incomestatementhistoryquarterly_df(spark: SparkSession, file_name: st
     )
 
 
-def create_financialdatahistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_financialdatahistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "financialdatahistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("financialDataHistoryQuarterly").alias("array"))
@@ -318,7 +339,10 @@ def create_financialdatahistoryquarterly_df(spark: SparkSession, file_name: str)
     )
 
 
-def create_valueaddedhistoryquarterly_df(spark: SparkSession, file_name: str) -> DataFrame:
+def create_valueaddedhistoryquarterly_df(
+    spark: SparkSession,
+    file_name: str = "valueaddedhistoryquarterly.json",
+) -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
         .select("symbol", F.explode("valueAddedHistoryQuarterly").alias("array"))
