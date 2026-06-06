@@ -15,8 +15,18 @@ logger = logging.getLogger(__name__)
 
 API_QUOTE_LIMIT_STOCKS_PER_REQUEST = 10
 API_LIST_LIMIT_STOCKS_PER_PAGE = 2000
+API_MODULES = [
+    "defaultKeyStatistics",
+    "balanceSheetHistoryQuarterly",
+    "cashflowHistoryQuarterly",
+    "defaultKeyStatisticsHistoryQuarterly",
+    "incomeStatementHistoryQuarterly",
+    "financialDataHistoryQuarterly",
+    "valueAddedHistoryQuarterly",
+]
 RATE_LIMIT_WAIT = 1.0
 FREE_STOCKS_TICKERS = ["PETR4", "MGLU3", "VALE3", "ITUB4"]
+
 TOKEN = os.getenv("TOKEN")
 
 
@@ -127,88 +137,12 @@ if __name__ == "__main__":
     active_tickers_list: list[str] = [stock['stock'] for stock in active_tickers_response]
     logger.info(f"Total Active Stocks Found: {len(active_tickers_list)} \n")
 
-    # -----------------------------------------------------------------
+    # To ingest all available modules, this behaviour is set as default.
+    # You will need to have a pro api plan to ingest all modules for all
+    # public available stocks.
 
-    # Fetch defaultKeyStatistics
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="defaultKeyStatistics",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"defaultkeystatistics"
-    )
+    _stock_list = FREE_STOCKS_TICKERS
 
-    # Quarterly Modules -----------------------------------------------
-
-    # Fetch balanceSheetHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="balanceSheetHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"balancesheethistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Fetch cashflowHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="cashflowHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"cashflowhistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Fetch defaultKeyStatisticsHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="defaultKeyStatisticsHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"defaultkeystatisticshistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Fetch incomeStatementHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="incomeStatementHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"incomestatementhistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Fetch financialDataHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="financialDataHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"financialdatahistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
-
-    # Fetch valueAddedHistoryQuarterly
-    api_response = fetch_api_data_per_ticker_batch(
-        stock_list=FREE_STOCKS_TICKERS,
-        module="valueAddedHistoryQuarterly",
-    )
-    save_json_data(
-        data=api_response,
-        file_name=f"valueaddedhistoryquarterly"
-    )
-
-    # -----------------------------------------------------------------
+    for _module in API_MODULES:
+        api_response = fetch_api_data_per_ticker_batch(stock_list=_stock_list, module=_module)
+        save_json_data(data=api_response, file_name=_module.lower())
