@@ -1,12 +1,9 @@
-import constants
-import json
 import os
 import logging
 import requests
 import time
 
 from dotenv import load_dotenv
-from typing import Any
 
 load_dotenv()
 
@@ -65,14 +62,6 @@ def get_active_stock_tickers() -> list[dict]:
     return all_stocks
 
 
-def save_json_data(data: Any, file_name: str, storage_dir: str = constants.RAW_LAYER) -> None:
-    os.makedirs(storage_dir, exist_ok=True)
-    file_path = os.path.join(storage_dir, f"{file_name}.json")
-
-    with open(file_path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=4)
-
-
 def get_api_stock_data_per_module(ticker_list: list[str], module: str) -> list[dict]:
     if ticker_list is None:
         logger.info(f"Fetching stock data for only free tickers: {FREE_STOCKS_TICKERS}")
@@ -123,26 +112,3 @@ def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str) -> list[
     logger.error(f"Successfully retrieved data for {len(data_results)}/{len(stock_list)} stocks.\n")
 
     return data_results
-
-
-if __name__ == "__main__":
-    # Fetch all active stock tickers (~2,280 items on jun/2026)
-    active_tickers_response = get_active_stock_tickers()
-
-    save_json_data(
-        data=active_tickers_response,
-        file_name=f"activetickers"
-    )
-
-    active_tickers_list: list[str] = [stock['stock'] for stock in active_tickers_response]
-    logger.info(f"Total Active Stocks Found: {len(active_tickers_list)} \n")
-
-    # To ingest all available modules, this behaviour is set as default.
-    # You will need to have a pro api plan to ingest all modules for all
-    # public available stocks.
-
-    _stock_list = FREE_STOCKS_TICKERS
-
-    for _module in API_MODULES:
-        api_response = fetch_api_data_per_ticker_batch(stock_list=_stock_list, module=_module)
-        save_json_data(data=api_response, file_name=_module.lower())
