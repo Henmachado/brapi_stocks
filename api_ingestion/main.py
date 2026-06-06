@@ -124,7 +124,7 @@ if __name__ == "__main__":
 
     save_json_data(
         data=active_tickers_response,
-        file_name=f"active_tickers_{today_str}"
+        file_name=f"activetickers_{today_str}"
     )
 
     active_tickers_list: list[str] = [stock['stock'] for stock in active_tickers_response]
