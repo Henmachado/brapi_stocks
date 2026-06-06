@@ -1,8 +1,0 @@
-Metadata-Version: 2.4
-Name: brapistocks
-Version: 0.1.0
-Summary: Add your description here
-Requires-Python: >=3.9
-Requires-Dist: pyspark>=4.0.2
-Requires-Dist: requests>=2.32.5
-Requires-Dist: urllib3<2

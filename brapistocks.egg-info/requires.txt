@@ -1,3 +1,0 @@
-pyspark>=4.0.2
-requests>=2.32.5
-urllib3<2
