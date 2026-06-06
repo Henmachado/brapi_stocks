@@ -21,9 +21,11 @@ if __name__ == "__main__":
 
     stock_list = brapi_api_consumer.FREE_STOCKS_TICKERS  # replace for active_tickers_list in pro api plan
 
+    # Fetch data for all available modules
     for _module in brapi_api_consumer.API_MODULES:
         api_response = brapi_api_consumer.fetch_api_data_per_ticker_batch(stock_list=stock_list, module=_module)
         utils.save_json_data(data=api_response, file_name=_module.lower())
 
+    # Fetch data for default api response (no module passed on request)
     api_response = brapi_api_consumer.fetch_api_data_per_ticker_batch(stock_list=stock_list)
     utils.save_json_data(data=api_response, file_name="defaultquoteapi")
