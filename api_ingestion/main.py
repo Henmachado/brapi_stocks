@@ -83,7 +83,7 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str) -> list[d
     results = response.json().get("results", [])
 
     if module != "defaultKeyStatistics":
-        selected_keys = {"symbol", module}
+        selected_keys = {"symbol", module}  # for other modules, we don't need to reingest same data again
         filtered_results = [
             {k: v for k, v in item.items() if k in selected_keys}
             for item in results
