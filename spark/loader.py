@@ -1,9 +1,11 @@
 import os
 import re
+
 from spark import dataframes
 from pyspark.sql import SparkSession
 
-def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw"):
+
+def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw") -> None:
     """
     Automatically discovers the latest raw JSON files and creates DataFrames
     for all 'create_*' functions defined in spark.dataframes.
@@ -16,8 +18,6 @@ def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw"):
     # we'll use a simple heuristic or regex to match them to files
     
     all_files = os.listdir(data_dir)
-    
-    loaded_tables = []
     
     for func_name in create_funcs:
         # Extract the logical name, e.g., 'balancesheethistoryquarterly'
@@ -41,11 +41,7 @@ def load_all_tables(spark: SparkSession, data_dir: str = "./data/raw"):
         # Register as a Temp View for SQL queries
         # View name will be the logical name (e.g., 'balancesheethistoryquarterly')
         df.createOrReplaceTempView(logical_name)
-        
-        loaded_tables.append(logical_name)
-        print(f"Loaded table: {logical_name} (from {latest_file})")
-        
-    return loaded_tables
+
 
 if __name__ == "__main__":
     # Quick test
