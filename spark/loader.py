@@ -1,5 +1,3 @@
-import constants
-
 from spark import dataframes
 from pyspark.sql import SparkSession
 
@@ -22,5 +20,3 @@ def load_spark_tables(spark: SparkSession) -> None:
         func = getattr(dataframes, func_name)
         df = func(spark=spark)
         df.createOrReplaceTempView(logical_name)
-
-        df.write.format("parquet").mode("overwrite").save(f"{constants.PROCESSED_LAYER}{logical_name}")
