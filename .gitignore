@@ -7,6 +7,10 @@ __pycache__/
 *$py.class
 .venv/
 .env
+*.egg-info/
+build/
+dist/
+.ipynb_checkpoints/
 
 # IDEs
 .idea/
