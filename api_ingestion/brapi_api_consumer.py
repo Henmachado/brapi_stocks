@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 API_QUOTE_LIMIT_STOCKS_PER_REQUEST = 10
 API_LIST_LIMIT_STOCKS_PER_PAGE = 2000
 API_MODULES = [
-    "defaultKeyStatistics",
     "balanceSheetHistoryQuarterly",
     "cashflowHistoryQuarterly",
     "defaultKeyStatisticsHistoryQuarterly",
@@ -62,7 +61,7 @@ def get_active_stock_tickers() -> list[dict]:
     return all_stocks
 
 
-def get_api_stock_data_per_module(ticker_list: list[str], module: str) -> list[dict]:
+def get_api_stock_data_per_module(ticker_list: list[str], module: str = None) -> list[dict]:
     if ticker_list is None:
         logger.info(f"Fetching stock data for only free tickers: {FREE_STOCKS_TICKERS}")
         ticker_list = FREE_STOCKS_TICKERS
@@ -81,8 +80,8 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str) -> list[d
 
     results = response.json().get("results", [])
 
-    if module != "defaultKeyStatistics":
-        selected_keys = {"symbol", module}  # for other modules, we don't need to reingest same data again
+    if module is not None:
+        selected_keys = {"symbol", module}
         filtered_results = [
             {k: v for k, v in item.items() if k in selected_keys}
             for item in results
@@ -94,7 +93,7 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str) -> list[d
     return results
 
 
-def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str) -> list[dict]:
+def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str = None) -> list[dict]:
     logger.info(f"Getting stock data | Module: {module}")
 
     data_results = []

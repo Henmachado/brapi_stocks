@@ -24,3 +24,6 @@ if __name__ == "__main__":
     for _module in brapi_api_consumer.API_MODULES:
         api_response = brapi_api_consumer.fetch_api_data_per_ticker_batch(stock_list=stock_list, module=_module)
         utils.save_json_data(data=api_response, file_name=_module.lower())
+
+    api_response = brapi_api_consumer.fetch_api_data_per_ticker_batch(stock_list=stock_list)
+    utils.save_json_data(data=api_response, file_name="defaultquoteapi")

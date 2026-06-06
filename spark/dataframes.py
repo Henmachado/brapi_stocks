@@ -15,9 +15,9 @@ def create_activetickers_df(
     return read_raw_layer_json(spark=spark, file_name=file_name)
 
 
-def create_defaultkeystatistics_df(
+def create_defaultquoteapi_df(
     spark: SparkSession,
-    file_name: str = "defaultkeystatistics.json",
+    file_name: str = "defaultquoteapi.json",
 ) -> DataFrame:
     return read_raw_layer_json(spark=spark, file_name=file_name)
 
