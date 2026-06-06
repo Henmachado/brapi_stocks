@@ -1,6 +1,6 @@
 ## Ingest api data:
 ```
-uv run api_ingestion/main.py
+uv run main.py
 ```
 
 ## Setup local data lake:
