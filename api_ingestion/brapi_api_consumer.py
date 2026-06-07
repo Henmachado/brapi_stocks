@@ -13,6 +13,7 @@ logger = logging.getLogger(__name__)
 API_QUOTE_LIMIT_STOCKS_PER_REQUEST = 10
 API_LIST_LIMIT_STOCKS_PER_PAGE = 2000
 API_MODULES = [
+    None,  # Default API response from /quotes endpoint
     "balanceSheetHistoryQuarterly",
     "cashflowHistoryQuarterly",
     "defaultKeyStatisticsHistoryQuarterly",

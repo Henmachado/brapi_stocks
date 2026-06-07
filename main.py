@@ -42,7 +42,7 @@ if __name__ == "__main__":
     # 2. Parallel Ingestion for all modules and default quotes
     with ThreadPoolExecutor(max_workers=10) as executor:
         # Prepare the list of tasks (modules + None for default quotes)
-        tasks = brapi_api_consumer.API_MODULES + [None]
+        tasks = brapi_api_consumer.API_MODULES
 
         logger.info(f"Starting parallel ingestion for {len(tasks)} tasks...\n")
 
