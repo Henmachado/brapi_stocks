@@ -1,3 +1,10 @@
+# Build using `uv`:
+```
+uv sync
+
+uv pip install -e .
+```
+
 # Ingest api data:
 ```
 uv run main.py
