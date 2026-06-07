@@ -54,7 +54,6 @@ def get_active_stock_tickers() -> list[dict]:
             page_stocks = page_data.get('stocks', [])
             logger.info(f"Fetching page {page}/{total_pages} | Stock Tickers: {len(page_stocks)}")
             all_stocks.extend(page_stocks)
-            time.sleep(RATE_LIMIT_WAIT)  # Avoid firewall and rate limits in case of multiple pages
         else:
             logger.error(f"Failed to fetch page {page}: {page_response.status_code}")
 
@@ -94,20 +93,19 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str = None) ->
 
 
 def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str = None) -> list[dict]:
-    logger.info(f"Getting stock data | Module: {module}")
-
     data_results = []
     for i in range(0, len(stock_list), API_QUOTE_LIMIT_STOCKS_PER_REQUEST):
         # Loop through the tickers in chunks according API limits
 
         batch = stock_list[i:i + API_QUOTE_LIMIT_STOCKS_PER_REQUEST]
-        logger.info(f"Fetching batch {i // API_QUOTE_LIMIT_STOCKS_PER_REQUEST + 1}: {', '.join(batch)}")
+        logger.info(
+            f"Getting stock data | Module: {module} | "
+            f"Fetching batch {i // API_QUOTE_LIMIT_STOCKS_PER_REQUEST + 1}"
+        )
 
         batch_response = get_api_stock_data_per_module(ticker_list=batch, module=module)
         data_results.extend(batch_response)
 
-        time.sleep(RATE_LIMIT_WAIT) # Avoid firewall and rate limits
-
-    logger.error(f"Successfully retrieved data for {len(data_results)}/{len(stock_list)} stocks.\n")
+    logger.error(f"\nSuccessfully retrieved data for {len(data_results)}/{len(stock_list)} stocks for {module}\n")
 
     return data_results
