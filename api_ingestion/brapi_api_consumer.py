@@ -20,7 +20,6 @@ API_MODULES = [
     "financialDataHistoryQuarterly",
     "valueAddedHistoryQuarterly",
 ]
-RATE_LIMIT_WAIT = 1.0
 FREE_STOCKS_TICKERS = ["PETR4", "MGLU3", "VALE3", "ITUB4"]
 
 TOKEN = os.getenv("TOKEN")
