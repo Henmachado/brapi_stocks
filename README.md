@@ -1,7 +1,9 @@
 # Build using `uv`:
 ```
 uv sync
+```
 
+```
 uv pip install -e .
 ```
 
