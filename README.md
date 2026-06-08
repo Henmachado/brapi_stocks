@@ -8,7 +8,8 @@ uv pip install -e .
 # Ingest api data:
 ```
 uv run main.py -free            # Ingest only free api tickers
-
+```
+```
 uv run main.py -full-api        # Ingest all data from all modules (Token required)
 ```
 
