@@ -2,7 +2,7 @@ import os
 import logging
 import requests
 import time
-
+from functools import wraps
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -13,7 +13,6 @@ logger = logging.getLogger(__name__)
 API_QUOTE_LIMIT_STOCKS_PER_REQUEST = 10
 API_LIST_LIMIT_STOCKS_PER_PAGE = 2000
 API_MODULES = [
-    None,  # Default API response from /quotes endpoint
     "balanceSheetHistoryQuarterly",
     "cashflowHistoryQuarterly",
     "defaultKeyStatisticsHistoryQuarterly",
@@ -25,6 +24,26 @@ RATE_LIMIT_WAIT = 1.0
 FREE_STOCKS_TICKERS = ["PETR4", "MGLU3", "VALE3", "ITUB4"]
 
 TOKEN = os.getenv("TOKEN")
+
+
+def retry_request(max_retries=3, backoff_factor=2):
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            retries = 0
+            while retries < max_retries:
+                try:
+                    return func(*args, **kwargs)
+                except (requests.exceptions.ConnectionError, requests.exceptions.Timeout) as e:
+                    retries += 1
+                    if retries == max_retries:
+                        raise e
+                    wait = backoff_factor ** retries
+                    logger.warning(f"Connection error: {e}. Retrying in {wait}s... ({retries}/{max_retries})")
+                    time.sleep(wait)
+            return None
+        return wrapper
+    return decorator
 
 
 def get_active_stock_tickers() -> list[dict]:
@@ -61,6 +80,7 @@ def get_active_stock_tickers() -> list[dict]:
     return all_stocks
 
 
+@retry_request(max_retries=5, backoff_factor=2)
 def get_api_stock_data_per_module(ticker_list: list[str], module: str = None) -> list[dict]:
     if ticker_list is None:
         logger.info(f"Fetching stock data for only free tickers: {FREE_STOCKS_TICKERS}")
@@ -94,6 +114,9 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str = None) ->
 
 
 def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str = None) -> list[dict]:
+    if module is None:
+        module = "defaultQuoteApi"
+
     data_results = []
     for i in range(0, len(stock_list), API_QUOTE_LIMIT_STOCKS_PER_REQUEST):
         # Loop through the tickers in chunks according API limits
@@ -106,7 +129,5 @@ def fetch_api_data_per_ticker_batch(stock_list: list[str], module: str = None) -
 
         batch_response = get_api_stock_data_per_module(ticker_list=batch, module=module)
         data_results.extend(batch_response)
-
-    logger.error(f"\nSuccessfully retrieved data for {len(data_results)}/{len(stock_list)} stocks for {module}\n")
 
     return data_results

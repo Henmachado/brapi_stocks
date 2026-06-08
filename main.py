@@ -40,7 +40,7 @@ if __name__ == "__main__":
         _stock_list = brapi_api_consumer.FREE_STOCKS_TICKERS
 
     # 2. Parallel Ingestion for all modules and default quotes
-    with ThreadPoolExecutor(max_workers=10) as executor:
+    with ThreadPoolExecutor(max_workers=20) as executor:
         # Prepare the list of tasks (modules + None for default quotes)
         tasks = brapi_api_consumer.API_MODULES
 
