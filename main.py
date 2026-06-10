@@ -18,6 +18,8 @@ def ingest_api_module_data(stock_list: list[str], module: str = None):
 
 
 if __name__ == "__main__":
+    logger.info(f"\n Starting Stock Data Ingestion \n")
+
     parser = argparse.ArgumentParser(description="Brapi Stock Data Ingestion")
     group = parser.add_mutually_exclusive_group()
     group.add_argument("-free", action="store_true", help="Ingest only free stock tickers")
@@ -25,7 +27,7 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    # 1. Fetch all active stock tickers (Synchronous because others depend on it)
+    logger.info(f"\n Fetching all active stock tickers \n")
     active_tickers_response = brapi_api_consumer.get_active_stock_tickers()
     utils.save_json_data(data=active_tickers_response, file_name=f"activetickers")
 
@@ -52,4 +54,3 @@ if __name__ == "__main__":
             completed_file = future.result()
 
     logger.info("\nAll data ingestion tasks completed successfully.")
-

@@ -20,6 +20,7 @@ API_MODULES = [
     "financialDataHistoryQuarterly",
     "valueAddedHistoryQuarterly",
 ]
+API_TIMEOUT = 10
 FREE_STOCKS_TICKERS = ["PETR4", "MGLU3", "VALE3", "ITUB4"]
 
 TOKEN = os.getenv("TOKEN")
@@ -48,7 +49,7 @@ def retry_request(max_retries=3, backoff_factor=2):
 def get_active_stock_tickers() -> list[dict]:
     """Fetches all active stock tickers from Brapi."""
     url = f"https://brapi.dev/api/quote/list?page=1&limit={API_LIST_LIMIT_STOCKS_PER_PAGE}"
-    initial_response = requests.request(method="GET", url=url, params={"token": TOKEN})
+    initial_response = requests.request(method="GET", url=url, params={"token": TOKEN}, timeout=API_TIMEOUT)
 
     if initial_response.status_code != 200:
         logger.error(f"Failed to fetch active tickers: {initial_response.status_code}")
@@ -66,7 +67,7 @@ def get_active_stock_tickers() -> list[dict]:
 
     for page in range(2, total_pages + 1):
         page_url = f"https://brapi.dev/api/quote/list?page={page}&limit={API_LIST_LIMIT_STOCKS_PER_PAGE}"
-        page_response = requests.request(method="GET", url=page_url, params={"token": TOKEN})
+        page_response = requests.request(method="GET", url=page_url, params={"token": TOKEN}, timeout=API_TIMEOUT)
 
         if page_response.status_code == 200:
             page_data = page_response.json()
@@ -91,7 +92,7 @@ def get_api_stock_data_per_module(ticker_list: list[str], module: str = None) ->
 
     url = f"https://brapi.dev/api/quote/{','.join(ticker_list)}"
     params = {"token": TOKEN, "modules": module}
-    response = requests.request(method="GET", url=url, params=params)
+    response = requests.request(method="GET", url=url, params=params, timeout=API_TIMEOUT)
 
     if response.status_code != 200:
         logger.error(f"Failed to fetch data for batch {ticker_list}: {response.status_code}")
