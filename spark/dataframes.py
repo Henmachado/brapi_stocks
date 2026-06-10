@@ -318,6 +318,13 @@ def create_financialdatahistoryquarterly_df(spark: SparkSession, file_name: str 
     )
 
 
+def create_historicaldataprice_df(spark: SparkSession, file_name: str = "historicaldataprice.json") -> DataFrame:
+    return (
+        read_raw_layer_json(spark=spark, file_name=file_name)
+        .select("symbol", F.explode("historicalDataPrice").alias("array"))
+    )
+
+
 def create_valueaddedhistoryquarterly_df(spark: SparkSession, file_name: str = "valueaddedhistoryquarterly.json") -> DataFrame:
     return (
         read_raw_layer_json(spark=spark, file_name=file_name)
